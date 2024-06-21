@@ -2,7 +2,6 @@ import {CanvasView} from './view/CanvasView';
 import {Ball} from './sprites/Ball';
 import {Brick} from './sprites/Brick';
 import {Paddle} from './sprites/Paddle';
-
 // Images
 import PADDLE_IMAGE from './images/paddle.png';
 import BALL_IMAGE from './images/ball.png';
@@ -19,6 +18,8 @@ import {
 } from './setup';
 // Helpers
 import {createBricks} from './helpers';
+import {Collision} from './Collision';
+
 
 let gameOver: boolean = false;
 let score: number = 0;
@@ -41,7 +42,8 @@ function gameLoop(
     screen: CanvasView,
     bricks: Brick[],
     paddle: Paddle,
-    ball: Ball
+    ball: Ball,
+    collision: Collision
 ) {
     let timeNow = performance.now();
     let deltaTime = (timestamp - timeNow) / frameDuration;
@@ -54,6 +56,14 @@ function gameLoop(
         screen.drawSprite(ball);
         // Move ball
         ball.moveBall();
+        // Check collision
+        collision.checkWallCollision(ball, paddle, screen);
+        const colliding: boolean = collision.checkCollidingWithBrick(ball, bricks);
+
+        if (colliding) {
+            score += 1;
+            screen.drawScore(score);
+        }
         // Move paddle and check so it won't exit the playfield
         if (
             (paddle.isMovingLeft && paddle.pos.x > 0) ||
@@ -62,7 +72,7 @@ function gameLoop(
             paddle.movePaddle();
         }
         requestAnimationFrame(timestamp =>
-            gameLoop(timestamp, screen, bricks, paddle, ball)
+            gameLoop(timestamp, screen, bricks, paddle, ball, collision)
         );
     }
 }
@@ -92,8 +102,9 @@ function startGame(screen: CanvasView) {
         },
         PADDLE_IMAGE
     );
+    let collision: Collision = new Collision();
 
-    gameLoop(lastTimestamp, screen, bricks, paddle, ball);
+    gameLoop(lastTimestamp, screen, bricks, paddle, ball, collision);
 }
 
 // Create a new view
