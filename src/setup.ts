@@ -3,7 +3,6 @@ import BLUE_BRICK_IMAGE from './images/brick-blue.png';
 import GREEN_BRICK_IMAGE from './images/brick-green.png';
 import YELLOW_BRICK_IMAGE from './images/brick-yellow.png';
 import PURPLE_BRICK_IMAGE from './images/brick-purple.png';
-import { Paddle } from '~/sprites/Paddle';
 
 // Grab the canvas element for calculating the brick width
 // depending on canvas width
@@ -27,10 +26,9 @@ export const PADDLE_SPEED = 10;
 export const BALL_SPEED = 5;
 export const BALL_SIZE = 20;
 export const BALL_STARTX = canvas ? canvas.width / 2 - BALL_SIZE / 2 : 500;
-// export const BALL_STARTY = canvas
-//   ? canvas.height - PADDLE_HEIGHT - BALL_SIZE - 5
-//   : 500;
-export const BALL_STARTY = 170;
+export const BALL_STARTY = canvas
+  ? canvas.height - PADDLE_HEIGHT - BALL_SIZE - 5
+  : 500;
 
 export const BRICK_IMAGES: { [key: number]: string } = {
   1: RED_BRICK_IMAGE,

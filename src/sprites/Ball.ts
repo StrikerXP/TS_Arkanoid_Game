@@ -1,4 +1,4 @@
-import { Vector } from '../types';
+import { Vector } from '~/types';
 import { Paddle } from '~/sprites/Paddle';
 import { Brick } from '~/sprites/Brick';
 
