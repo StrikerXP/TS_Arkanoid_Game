@@ -39,18 +39,8 @@ export class Collision {
 
     checkWallCollision(
         ball: Ball,
-        paddle: Paddle,
         screen: CanvasView,
     ): void {
-        // Check ball collision with paddle
-        if (
-            ball.pos.x + ball.width > paddle.pos.x &&
-            ball.pos.x < paddle.pos.x + paddle.width &&
-            ball.pos.y + ball.height === paddle.pos.y
-        ) {
-            ball.changeYDirection();
-            ball.handlePaddleCollision(paddle);
-        }
         // Check ball collision with walls
         if (
             ball.pos.x > screen.canvas.width - ball.width ||
@@ -60,6 +50,43 @@ export class Collision {
         }
         if (ball.pos.y < 0) {
             ball.changeYDirection();
+        }
+    }
+
+    checkPaddleCollision(
+        ball: Ball,
+        paddle: Paddle,
+        screen: CanvasView
+    ) {
+        // Check ball collision with paddle
+        if (
+            ball.pos.x + ball.width > paddle.pos.x &&
+            ball.pos.x < paddle.pos.x + paddle.width &&
+            ball.pos.y + ball.height === paddle.pos.y &&
+            ball.pos.y < paddle.pos.y + paddle.height
+        ) {
+            ball.changeYDirection();
+            ball.handlePaddleCollision(paddle);
+        }
+        // Check ball collision with the left side of the paddle
+        if (
+            ball.pos.x + ball.width >= paddle.pos.x &&
+            ball.pos.x < paddle.pos.x &&
+            ball.pos.y + ball.height > paddle.pos.y &&
+            ball.pos.y < paddle.pos.y + paddle.height
+        ) {
+            ball.changeXDirection();
+            ball.handlePaddleCollision(paddle);
+        }
+        // Check ball collision with the right side of the paddle
+        if (
+            ball.pos.x <= paddle.pos.x + paddle.width &&
+            ball.pos.x + ball.width > paddle.pos.x + paddle.width &&
+            ball.pos.y + ball.height > paddle.pos.y &&
+            ball.pos.y < paddle.pos.y + paddle.height
+        ) {
+            ball.changeXDirection();
+            ball.handlePaddleCollision(paddle);
         }
     }
 }

@@ -57,7 +57,8 @@ function gameLoop(
         // Move ball
         ball.moveBall();
         // Check collision
-        collision.checkWallCollision(ball, paddle, screen);
+        collision.checkWallCollision(ball, screen);
+        collision.checkPaddleCollision(ball, paddle, screen);
         const colliding: boolean = collision.checkCollidingWithBrick(ball, bricks);
 
         if (colliding) {

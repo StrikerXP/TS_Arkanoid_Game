@@ -1,4 +1,5 @@
 import { Vector } from '../types';
+import { moveLeftKey, moveRightKey } from '../setup';
 
 export class Paddle {
   private paddleImage: HTMLImageElement = new Image();
@@ -56,14 +57,14 @@ export class Paddle {
   }
 
   handleKeyUp = (e: KeyboardEvent): void => {
-    if (e.code === 'ArrowLeft' || e.key === 'ArrowLeft') this.moveLeft = false;
-    if (e.code === 'ArrowRight' || e.key === 'ArrowRight')
+    if (moveLeftKey.includes(e.code) || moveLeftKey.includes(e.key)) this.moveLeft = false;
+    if (moveRightKey.includes(e.code) || moveRightKey.includes(e.key))
       this.moveRight = false;
   };
 
   handleKeyDown = (e: KeyboardEvent): void => {
-    if (e.code === 'ArrowLeft' || e.key === 'ArrowLeft') this.moveLeft = true;
-    if (e.code === 'ArrowRight' || e.key === 'ArrowRight')
+    if (moveLeftKey.includes(e.code) || moveLeftKey.includes(e.key)) this.moveLeft = true;
+    if (moveRightKey.includes(e.code) || moveRightKey.includes(e.key))
       this.moveRight = true;
   };
 }

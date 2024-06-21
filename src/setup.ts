@@ -8,6 +8,9 @@ import PURPLE_BRICK_IMAGE from './images/brick-purple.png';
 // depending on canvas width
 const canvas: HTMLCanvasElement | null = document.querySelector('#playField');
 
+// Control keys
+export const moveLeftKey = ['ArrowLeft', 'KeyA'];
+export const moveRightKey = ['ArrowRight', 'KeyD'];
 // Constants
 export const STAGE_PADDING = 10;
 export const STAGE_ROWS = 20;
