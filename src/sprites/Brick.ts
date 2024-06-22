@@ -31,7 +31,7 @@ export class Brick {
   }
 
   get image(): HTMLImageElement {
-    return this.brickImage;
+    return this.brickImage
   }
 
   get energy(): number {

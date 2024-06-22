@@ -7,8 +7,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-import { Brick } from './sprites/Brick';
-import { BRICK_IMAGES, LEVEL, STAGE_COLS, STAGE_PADDING, BRICK_WIDTH, BRICK_HEIGHT, BRICK_PADDING, BRICK_ENERGY, } from './setup';
+import { Brick } from '../sprites/Brick';
+import { BRICK_IMAGES, LEVEL, STAGE_COLS, STAGE_PADDING, BRICK_WIDTH, BRICK_HEIGHT, BRICK_PADDING, BRICK_ENERGY, } from '../setup';
 export function createBricks() {
     return LEVEL.reduce(function (acc, val, i) {
         var row = Math.floor((i + 1) / STAGE_COLS);

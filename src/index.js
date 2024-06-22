@@ -7,7 +7,7 @@ import BALL_IMAGE from './images/ball.png';
 // Level and colors
 import { PADDLE_SPEED, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_STARTX, BALL_SPEED, BALL_SIZE, BALL_STARTX, BALL_STARTY, } from './setup';
 // Helpers
-import { createBricks } from './helpers';
+import { createBricks } from './helpers/helpers';
 var gameOver = false;
 var score = 0;
 var targetFps = 60;

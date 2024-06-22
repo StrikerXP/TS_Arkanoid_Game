@@ -56,17 +56,16 @@ export class Collision {
     checkPaddleCollision(
         ball: Ball,
         paddle: Paddle,
-        screen: CanvasView
     ) {
         // Check ball collision with paddle
         if (
-            ball.pos.x + ball.width > paddle.pos.x &&
-            ball.pos.x < paddle.pos.x + paddle.width &&
-            ball.pos.y + ball.height === paddle.pos.y &&
+            ball.pos.x + ball.width >= paddle.pos.x &&
+            ball.pos.x <= paddle.pos.x + paddle.width &&
+            ball.pos.y + ball.height > paddle.pos.y &&
             ball.pos.y < paddle.pos.y + paddle.height
         ) {
             ball.changeYDirection();
-            ball.handlePaddleCollision(paddle);
+            ball.ballAngleBounce(paddle);
         }
         // Check ball collision with the left side of the paddle
         if (
@@ -76,7 +75,7 @@ export class Collision {
             ball.pos.y < paddle.pos.y + paddle.height
         ) {
             ball.changeXDirection();
-            ball.handlePaddleCollision(paddle);
+            ball.ballAngleBounce(paddle);
         }
         // Check ball collision with the right side of the paddle
         if (
@@ -86,7 +85,7 @@ export class Collision {
             ball.pos.y < paddle.pos.y + paddle.height
         ) {
             ball.changeXDirection();
-            ball.handlePaddleCollision(paddle);
+            ball.ballAngleBounce(paddle);
         }
     }
 }

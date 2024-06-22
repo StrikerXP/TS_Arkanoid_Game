@@ -52,7 +52,7 @@ export class Ball {
     this.pos.y += this.speed.y;
   }
 
-  handlePaddleCollision(object: Paddle | Brick): void {
+  ballAngleBounce(object: Paddle | Brick): void {
     //* Method to calculate new speed vector based on collision with paddle
     const ballCenterCoords:number = this.pos.x + this.ballSize / 2;
     const objectCenterCoords: number = object.pos.x + object.width / 2;

@@ -1,60 +1,114 @@
+import {
+    calculateBallStartYPosition,
+    calculateBrickDimensions,
+    calculateStartXPosition,
+    loadSettingsFromLocalStorage,
+} from './helpers/helpers';
 import RED_BRICK_IMAGE from './images/brick-red.png';
 import BLUE_BRICK_IMAGE from './images/brick-blue.png';
 import GREEN_BRICK_IMAGE from './images/brick-green.png';
 import YELLOW_BRICK_IMAGE from './images/brick-yellow.png';
 import PURPLE_BRICK_IMAGE from './images/brick-purple.png';
 
-// Grab the canvas element for calculating the brick width
-// depending on canvas width
-const canvas: HTMLCanvasElement | null = document.querySelector('#playField');
+export interface Settings {
+    moveLeftKey: string[];
+    moveRightKey: string[];
+    STAGE_PADDING: number;
+    STAGE_ROWS: number;
+    STAGE_COLS: number;
+    BRICK_PADDING: number;
+    BRICK_WIDTH: number;
+    BRICK_HEIGHT: number;
+    PADDLE_WIDTH: number;
+    PADDLE_HEIGHT: number;
+    PADDLE_STARTX: number;
+    PADDLE_SPEED: number;
+    BALL_SPEED: number;
+    BALL_SIZE: number;
+    BALL_STARTX: number;
+    BALL_STARTY: number;
+    BRICK_ENERGY: { [key: number]: number };
+    LEVEL: number[];
+}
 
-// Control keys
-export const moveLeftKey = ['ArrowLeft', 'KeyA'];
-export const moveRightKey = ['ArrowRight', 'KeyD'];
-// Constants
-export const STAGE_PADDING = 10;
-export const STAGE_ROWS = 20;
-export const STAGE_COLS = 10;
-export const BRICK_PADDING = 5;
-export const BRICK_WIDTH = canvas
-  ? Math.floor((canvas.width - STAGE_PADDING * 2) / STAGE_COLS) - BRICK_PADDING
-  : 100;
-export const BRICK_HEIGHT = canvas
-  ? Math.floor((canvas.height - STAGE_PADDING * 2) / STAGE_ROWS) - BRICK_PADDING
-  : 30;
-export const PADDLE_WIDTH = 150;
-export const PADDLE_HEIGHT = 25;
-export const PADDLE_STARTX = canvas ? canvas.width / 2 - PADDLE_WIDTH / 2 : 450;
-export const PADDLE_SPEED = 10;
-export const BALL_SPEED = 5;
-export const BALL_SIZE = 20;
-export const BALL_STARTX = canvas ? canvas.width / 2 - BALL_SIZE / 2 : 500;
-export const BALL_STARTY = canvas
-  ? canvas.height - PADDLE_HEIGHT - BALL_SIZE - 5
-  : 500;
+export const defaultSettings = {
+    moveLeftKey: ['ArrowLeft', 'KeyA'],
+    moveRightKey: ['ArrowRight', 'KeyD'],
+    STAGE_PADDING: 10,
+    STAGE_ROWS: 20,
+    STAGE_COLS: 10,
+    BRICK_PADDING: 5,
+    BRICK_WIDTH: 0,
+    BRICK_HEIGHT: 0,
+    PADDLE_WIDTH: 150,
+    PADDLE_HEIGHT: 25,
+    PADDLE_STARTX: 0,
+    PADDLE_SPEED: 10,
+    BALL_SPEED: 5,
+    BALL_SIZE: 20,
+    BALL_STARTX: 0,
+    BALL_STARTY: 0,
+    BRICK_ENERGY: {
+        1: 1,
+        2: 1,
+        3: 2,
+        4: 2,
+        5: 3,
+    },
+    LEVEL: [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+        1, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 3, 3, 3,
+        3, 3, 3, 3, 3, 0, 0, 0, 4, 4, 4, 4, 4, 4, 0, 0, 0,
+        0, 5, 5, 0, 0, 5, 5, 0, 0,
+    ],
+};
 
 export const BRICK_IMAGES: { [key: number]: string } = {
-  1: RED_BRICK_IMAGE,
-  2: GREEN_BRICK_IMAGE,
-  3: YELLOW_BRICK_IMAGE,
-  4: BLUE_BRICK_IMAGE,
-  5: PURPLE_BRICK_IMAGE,
+    1: RED_BRICK_IMAGE,
+    2: GREEN_BRICK_IMAGE,
+    3: YELLOW_BRICK_IMAGE,
+    4: BLUE_BRICK_IMAGE,
+    5: PURPLE_BRICK_IMAGE,
 };
 
-export const BRICK_ENERGY: { [key: number]: number } = {
-  1: 1, // Red brick
-  2: 1, // Green brick
-  3: 2, // Yellow brick
-  4: 2, // Blue brick
-  5: 3, // Purple brick
-};
+export function adjustDefaultSettings(): Settings {
+    defaultSettings.BRICK_WIDTH = calculateBrickDimensions(
+        'width',
+        defaultSettings.STAGE_COLS,
+        100
+    );
+    defaultSettings.BRICK_HEIGHT = calculateBrickDimensions(
+        'height',
+        defaultSettings.STAGE_ROWS,
+        30
+    );
+    defaultSettings.PADDLE_STARTX = calculateStartXPosition(
+        defaultSettings.PADDLE_WIDTH,
+        450
+    );
+    defaultSettings.BALL_STARTX = calculateStartXPosition(
+        defaultSettings.BALL_SIZE,
+        500
+    );
+    defaultSettings.BALL_STARTY =
+        calculateBallStartYPosition();
 
-// prettier-ignore
-export const LEVEL = [
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 1, 1, 1, 1, 1, 1, 0, 0,
-  0, 2, 2, 2, 2, 2, 2, 2, 2, 0,
-  0, 3, 3, 3, 3, 3, 3, 3, 3, 0,
-  0, 0, 4, 4, 4, 4, 4, 4, 0, 0, 
-  0, 0, 5, 5, 0, 0, 5, 5, 0, 0,
-];
+    return defaultSettings;
+}
+
+export class SettingsManager {
+    private static instance: SettingsManager;
+    public settings: Settings;
+
+    private constructor() {
+        this.settings = loadSettingsFromLocalStorage();
+    }
+
+    public static getInstance(): SettingsManager {
+        if (!SettingsManager.instance) {
+            SettingsManager.instance =
+                new SettingsManager();
+        }
+        return SettingsManager.instance;
+    }
+}

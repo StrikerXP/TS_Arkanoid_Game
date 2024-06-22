@@ -1,25 +1,14 @@
-import {CanvasView} from './view/CanvasView';
-import {Ball} from './sprites/Ball';
-import {Brick} from './sprites/Brick';
-import {Paddle} from './sprites/Paddle';
+import { CanvasView } from './view/CanvasView';
+import { Ball } from './sprites/Ball';
+import { Brick } from './sprites/Brick';
+import { Paddle } from './sprites/Paddle';
 // Images
 import PADDLE_IMAGE from './images/paddle.png';
 import BALL_IMAGE from './images/ball.png';
-// Level and colors
-import {
-    PADDLE_SPEED,
-    PADDLE_WIDTH,
-    PADDLE_HEIGHT,
-    PADDLE_STARTX,
-    BALL_SPEED,
-    BALL_SIZE,
-    BALL_STARTX,
-    BALL_STARTY,
-} from './setup';
 // Helpers
-import {createBricks} from './helpers';
-import {Collision} from './Collision';
-
+import { createBricks } from './helpers/helpers';
+import { Collision } from './helpers/Collision';
+import { SettingsManager } from './setup';
 
 let gameOver: boolean = false;
 let score: number = 0;
@@ -58,8 +47,9 @@ function gameLoop(
         ball.moveBall();
         // Check collision
         collision.checkWallCollision(ball, screen);
-        collision.checkPaddleCollision(ball, paddle, screen);
-        const colliding: boolean = collision.checkCollidingWithBrick(ball, bricks);
+        collision.checkPaddleCollision(ball, paddle);
+        const colliding: boolean =
+            collision.checkCollidingWithBrick(ball, bricks);
 
         if (colliding) {
             score += 1;
@@ -68,13 +58,22 @@ function gameLoop(
         // Move paddle and check so it won't exit the playfield
         if (
             (paddle.isMovingLeft && paddle.pos.x > 0) ||
-            (paddle.isMovingRight && paddle.pos.x < screen.canvas.width - paddle.width)
+            (paddle.isMovingRight &&
+                paddle.pos.x <
+                    screen.canvas.width - paddle.width)
         ) {
             paddle.movePaddle();
         }
-        requestAnimationFrame(timestamp =>
-            gameLoop(timestamp, screen, bricks, paddle, ball, collision)
-        );
+        requestAnimationFrame((timestamp) => {
+            gameLoop(
+                timestamp,
+                screen,
+                bricks,
+                paddle,
+                ball,
+                collision
+            );
+        });
     }
 }
 
@@ -87,27 +86,42 @@ function startGame(screen: CanvasView) {
     const bricks = createBricks();
     // Create a Ball
     const ball = new Ball(
-        BALL_SPEED,
-        BALL_SIZE,
-        {x: BALL_STARTX, y: BALL_STARTY},
+        settings.BALL_SPEED,
+        settings.BALL_SIZE,
+        {
+            x: settings.BALL_STARTX,
+            y: settings.BALL_STARTY,
+        },
         BALL_IMAGE
     );
     // Create a Paddle
     const paddle = new Paddle(
-        PADDLE_SPEED,
-        PADDLE_WIDTH,
-        PADDLE_HEIGHT,
+        settings.PADDLE_SPEED,
+        settings.PADDLE_WIDTH,
+        settings.PADDLE_HEIGHT,
         {
-            x: PADDLE_STARTX,
-            y: screen.canvas.height - PADDLE_HEIGHT - 5,
+            x: settings.PADDLE_STARTX,
+            y:
+                screen.canvas.height -
+                settings.PADDLE_HEIGHT -
+                5,
         },
         PADDLE_IMAGE
     );
     let collision: Collision = new Collision();
 
-    gameLoop(lastTimestamp, screen, bricks, paddle, ball, collision);
+    gameLoop(
+        lastTimestamp,
+        screen,
+        bricks,
+        paddle,
+        ball,
+        collision
+    );
 }
 
 // Create a new view
 const view = new CanvasView('#playField');
+export const settings =
+    SettingsManager.getInstance().settings;
 view.initStartButton(startGame);
