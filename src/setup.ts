@@ -31,7 +31,7 @@ export interface Settings {
     LEVEL: number[];
 }
 
-export const defaultSettings = {
+export const defaultSettings: Settings = {
     moveLeftKey: ['ArrowLeft', 'KeyA'],
     moveRightKey: ['ArrowRight', 'KeyD'],
     STAGE_PADDING: 10,

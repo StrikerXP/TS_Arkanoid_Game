@@ -8,13 +8,13 @@ import BALL_IMAGE from './images/ball.png';
 // Helpers
 import { createBricks } from './helpers/helpers';
 import { Collision } from './helpers/Collision';
-import { SettingsManager } from './setup';
+import { Settings, SettingsManager } from './setup';
 
 let gameOver: boolean = false;
 let score: number = 0;
 const targetFps: number = 60;
-let lastTimestamp = 0;
-const frameDuration = 1000 / targetFps;
+let lastTimestamp: number = 0;
+const frameDuration: number = 1000 / targetFps;
 
 function setGameOver(screen: CanvasView) {
     screen.drawInfo('Game Over!');
@@ -33,9 +33,9 @@ function gameLoop(
     paddle: Paddle,
     ball: Ball,
     collision: Collision
-) {
-    let timeNow = performance.now();
-    let deltaTime = (timestamp - timeNow) / frameDuration;
+): void {
+    let timeNow: number = performance.now();
+    let deltaTime: number = (timestamp - timeNow) / frameDuration;
     lastTimestamp = timeNow;
 
     if (lastTimestamp >= deltaTime) {
@@ -64,7 +64,7 @@ function gameLoop(
         ) {
             paddle.movePaddle();
         }
-        requestAnimationFrame((timestamp) => {
+        requestAnimationFrame((timestamp): void => {
             gameLoop(
                 timestamp,
                 screen,
@@ -83,9 +83,9 @@ function startGame(screen: CanvasView) {
     screen.drawInfo('');
     screen.drawScore(0);
     // Create all bricks
-    const bricks = createBricks();
+    const bricks: Brick[] = createBricks();
     // Create a Ball
-    const ball = new Ball(
+    const ball: Ball = new Ball(
         settings.BALL_SPEED,
         settings.BALL_SIZE,
         {
@@ -95,7 +95,7 @@ function startGame(screen: CanvasView) {
         BALL_IMAGE
     );
     // Create a Paddle
-    const paddle = new Paddle(
+    const paddle: Paddle = new Paddle(
         settings.PADDLE_SPEED,
         settings.PADDLE_WIDTH,
         settings.PADDLE_HEIGHT,
@@ -121,7 +121,7 @@ function startGame(screen: CanvasView) {
 }
 
 // Create a new view
-const view = new CanvasView('#playField');
-export const settings =
+const view: CanvasView = new CanvasView('#playField');
+export const settings: Settings =
     SettingsManager.getInstance().settings;
 view.initStartButton(startGame);

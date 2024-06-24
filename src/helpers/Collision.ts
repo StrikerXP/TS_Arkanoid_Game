@@ -56,7 +56,7 @@ export class Collision {
     checkPaddleCollision(
         ball: Ball,
         paddle: Paddle,
-    ) {
+    ): void {
         // Check ball collision with paddle
         if (
             ball.pos.x + ball.width >= paddle.pos.x &&
